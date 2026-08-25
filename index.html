@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#07000a" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="Bu hikoya faqat sen uchun..." />
+  <title>Bu hikoya faqat sen uchun ❤️</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ff5c8a' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-stage="start">
+
+<noscript>
+  <div style="position:fixed;inset:0;display:grid;place-items:center;background:#07000a;color:#ffd1dc;font-family:sans-serif;text-align:center;padding:24px;z-index:999">
+    Bu hikoyani ochish uchun brauzerda JavaScript yoqib qo‘ying ❤️
+  </div>
+</noscript>
+
+<div class="bg-aura" aria-hidden="true"></div>
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+
+<audio id="bg-music" loop preload="auto">
+  <source src="audio/romantic.mp3" type="audio/mpeg" />
+</audio>
+
+<button id="music-btn" aria-label="Musiqani yoqish/o‘chirish" aria-pressed="false">🔊</button>
+
+<!-- START -->
+<section id="screen-start" class="screen active" aria-label="Boshlanish">
+  <div class="heart-beat-wrap" aria-hidden="true"><div class="css-heart"></div></div>
+  <h1 class="start-title fade-seq d1">Bu hikoya faqat sen uchun... <span class="accent">❤️</span></h1>
+  <p class="start-sub fade-seq d2">Tayyormisan?</p>
+  <button id="btn-start" class="btn-primary btn-lg fade-seq d3">Boshlash ❤️</button>
+</section>
+
+<!-- CAMERA -->
+<section id="screen-camera" class="screen" aria-label="Kichkina xotira">
+  <div class="glass-card cam-card">
+
+    <div id="cam-prompt">
+      <h2 class="cam-title">Kichkina bir xotira... 📸</h2>
+      <p class="cam-desc">
+        Bu hikoyadan kichkina xotira saqlab qo‘yamiz... ❤️<br />
+        Oxirida surat sovg‘a ichida paydo bo‘ladi.<br />
+        <em>Ruxsat bermasang ham hikoya to‘liq davom etadi.</em>
+      </p>
+      <div class="btn-row">
+        <button id="btn-camera-yes" class="btn-primary">📷 Ha, suratga olamiz</button>
+        <button id="btn-camera-skip" class="btn-ghost">Suratsiz davom etish</button>
+      </div>
+    </div>
+
+    <div id="cam-preview" hidden>
+      <h2 class="cam-title">Tayyor bo‘lsang... ❤️</h2>
+      <div class="cam-frame"><video id="cam-video" autoplay playsinline muted></video></div>
+      <div class="btn-row">
+        <button id="btn-camera-capture" class="btn-primary">📸 Suratga olish</button>
+        <button id="btn-camera-cancel" class="btn-ghost">Bekor qilish</button>
+      </div>
+    </div>
+
+    <div id="cam-captured" hidden>
+      <h2 class="cam-title">Zo‘r! ❤️</h2>
+      <div class="cam-frame small"><img id="cam-captured-img" alt="Surat" /></div>
+      <p class="cam-desc">Suratingiz qurilmangizda xavfsiz saqlandi.</p>
+      <button id="btn-camera-continue" class="btn-primary">Davom etish ❤️</button>
+    </div>
+
+    <p id="cam-error-note" class="cam-note" hidden>Kamera ochilmadi — muammo emas, hikoya davom etadi ❤️</p>
+  </div>
+</section>
+
+<!-- COUNTDOWN -->
+<section id="screen-countdown" class="screen" aria-live="assertive">
+  <div id="cd-number" aria-hidden="true"></div>
+  <div id="cd-flash" aria-hidden="true"></div>
+</section>
+
+<!-- QUESTIONS -->
+<section id="screen-questions" class="screen screen-scroll" aria-label="Savollar">
+  <div class="q-wrap">
+    <header class="q-progress-head">
+      <p id="q-progress-text" class="q-progress-text">01 / 11</p>
+      <div class="q-progress-track"><div id="q-progress-bar" class="q-progress-bar"></div></div>
+    </header>
+
+    <div id="question-card">
+      <span id="q-badge" class="q-badge">Savol 01</span>
+      <p id="q-text" class="q-text">...</p>
+      <div id="q-answers" role="group" aria-label="Javob variantlari"></div>
+    </div>
+
+    <div id="feedback-pill" role="status" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- CINEMATIC FINALE MESSAGES -->
+<section id="screen-cinematic" class="screen" aria-live="polite">
+  <div id="cin-stage" class="cin-stage"></div>
+</section>
+
+<!-- GIFT -->
+<section id="screen-gift" class="screen" aria-label="Sovg‘a">
+  <p class="gift-title">Lekin senga hali bitta sovg‘am bor...</p>
+  <p class="gift-hint" aria-hidden="true">↓ Ochish uchun bosing ↓</p>
+
+  <div id="gift-box" role="button" tabindex="0" aria-label="Sovg‘ani ochish">
+    <div class="gift-beam" aria-hidden="true"></div>
+    <div class="gift-body" aria-hidden="true"><div class="gift-ribbon-v"></div></div>
+    <div class="gift-lid" aria-hidden="true">
+      <div class="bow"><i class="bl"></i><i class="br"></i><i class="knot"></i></div>
+      <div class="gift-ribbon-h"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PHOTO REVEAL -->
+<section id="screen-reveal" class="screen screen-scroll" aria-label="Xotira">
+  <svg id="heart-svg" viewBox="0 0 220 200" width="240" height="218" role="img" aria-label="Yurak shaklidagi xotira surati">
+    <defs>
+      <clipPath id="heartClip">
+        <path d="M110 186 C110 186 14 128 14 66 C14 32 40 12 68 12 C88 12 103 23 110 38 C117 23 132 12 152 12 C180 12 206 32 206 66 C206 128 110 186 110 186 Z"/>
+      </clipPath>
+      <radialGradient id="heartGrad" cx="50%" cy="35%" r="75%">
+        <stop offset="0%" stop-color="#ff9db8"/>
+        <stop offset="55%" stop-color="#e0245e"/>
+        <stop offset="100%" stop-color="#5c0a26"/>
+      </radialGradient>
+      <filter id="heartGlow" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="6" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+    <path id="heart-glow-ring" d="M110 186 C110 186 14 128 14 66 C14 32 40 12 68 12 C88 12 103 23 110 38 C117 23 132 12 152 12 C180 12 206 32 206 66 C206 128 110 186 110 186 Z"
+          fill="none" stroke="rgba(255,140,175,.8)" stroke-width="3"/>
+    <path d="M110 186 C110 186 14 128 14 66 C14 32 40 12 68 12 C88 12 103 23 110 38 C117 23 132 12 152 12 C180 12 206 32 206 66 C206 128 110 186 110 186 Z"
+          fill="url(#heartGrad)"/>
+    <image id="heart-photo-image" width="220" height="200" preserveAspectRatio="xMidYMid slice" clip-path="url(#heartClip)"/>
+  </svg>
+
+  <div id="reveal-lines" class="reveal-lines">
+    <p class="rv-line">Bu surat endi bizning kichkina xotiramiz ❤️</p>
+    <p class="rv-line">Endi navbat senda...</p>
+    <p class="rv-line rv-strong">Men uchun sovg‘a yuborasanmi? ❤️</p>
+  </div>
+
+  <button id="btn-share" class="btn-primary btn-lg btn-share">🎁 Menga sovg‘a yuborish</button>
+
+  <div id="share-alt" class="share-alt" hidden>
+    <a id="btn-download" class="btn-secondary" download="kichkina-xotira.jpg" href="#">📥 Suratni yuklab olish</a>
+    <button id="btn-copy-msg" class="btn-secondary">📋 Xabarni nusxalash</button>
+  </div>
+</section>
+
+<!-- EXPIRED -->
+<section id="screen-expired" class="screen" aria-label="Xotira yakunlandi">
+  <div class="expired-heart" aria-hidden="true">❤️</div>
+  <h1 class="exp-line exp-l1">Bu sayt eskirdi... ❤️</h1>
+  <p class="exp-line exp-l2">Chunki undagi eng chiroyli qism allaqachon sodir bo‘lgan.</p>
+  <p class="exp-line exp-l3">Bu xotirani endi qayta ochib bo‘lmaydi. ❤️</p>
+</section>
+
+<script src="js/particles.js"></script>
+<script src="js/questions.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

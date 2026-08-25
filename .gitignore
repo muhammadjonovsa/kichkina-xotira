@@ -1,0 +1,27 @@
+# ─── Flutter artifacts (keep ignored, project root has Flutter structure) ───
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+
+# ─── IDE ─────────────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.iml
+
+# ─── OS ──────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Sensitive / personal ─────────────────────────────────────────────────────
+# Never commit captured photos or personal data
+*.jpg.b64
+captured_*.jpg
+
+# ─── Logs ────────────────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
