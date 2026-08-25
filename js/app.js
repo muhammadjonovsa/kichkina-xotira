@@ -22,6 +22,20 @@
   const SS_PROGRESS = 'fw_progress_v1';
   const SHARE_TEXT = 'Men uchun tayyorlangan kichkina xotira ❤️';
 
+  const LOVE_HEART_SVG =
+    '<svg id="lh-svg" viewBox="0 0 220 200" aria-hidden="true">' +
+    '<defs><radialGradient id="lhGrad" cx="50%" cy="35%" r="75%">' +
+    '<stop offset="0%" stop-color="#ff8fb3"/><stop offset="55%" stop-color="#e0245e"/><stop offset="100%" stop-color="#7a0f33"/>' +
+    '</radialGradient></defs>' +
+    '<path class="lh-body" d="M110 186 C110 186 14 128 14 66 C14 32 40 12 68 12 C88 12 103 23 110 38 C117 23 132 12 152 12 C180 12 206 32 206 66 C206 128 110 186 110 186 Z" fill="url(#lhGrad)"/>' +
+    '<g class="lh-cracks">' +
+    '<path class="ck ck1" d="M110 36 L96 68 L116 92 L100 122 L112 150"/>' +
+    '<path class="ck ck2" d="M58 52 L84 82 L68 114"/>' +
+    '<path class="ck ck3" d="M164 54 L138 84 L156 118"/>' +
+    '<path class="ck ck4" d="M110 36 L126 64 L108 94 L128 132"/>' +
+    '<path class="ck ck5" d="M34 76 L62 94 L46 124 M186 74 L158 92 L174 122"/>' +
+    '</g></svg>';
+
   /* ── State ───────────────────────────────────────────────────── */
   const state = {
     qIndex: 0,
@@ -410,6 +424,14 @@
     posRects = Array.from(box.children).filter((b) => b.dataset.type === 'positive');
 
     const card = $('question-card');
+    box.classList.toggle('two', q.answers.length === 2);
+    if (q.special === 'love-heart') {
+      const stg = document.createElement('div');
+      stg.id = 'love-heart-stage';
+      stg.innerHTML = LOVE_HEART_SVG;
+      card.insertBefore(stg, box);
+    }
+
     card.classList.remove('enter', 'leave');
     void card.offsetWidth;
     requestAnimationFrame(() => requestAnimationFrame(() => card.classList.add('enter')));
@@ -459,6 +481,8 @@
   }
 
   function onNegative(q, ans, btn) {
+    if (q.special === 'love-heart') { handleLoveBreak(); return; }
+
     const k = q.id + '-' + ans.key;
     const clicks = (state.negClicks[k] = (state.negClicks[k] || 0) + 1);
 
@@ -540,6 +564,65 @@
       b.style.transform = '';
     });
   });
+
+  /* ── Savol 11: yurak sinişi mexanikasi ───────────────────────── */
+  async function handleLoveBreak() {
+    if (state.busy) return;
+    const n = (state.negClicks['no'] = (state.negClicks['no'] || 0) + 1);
+    const svg = document.getElementById('lh-svg');
+    if (!svg) return;
+
+    if (n >= 5) {
+      state.busy = true;
+      showFeedback('💔...', false);
+      try { sessionStorage.removeItem(SS_PROGRESS); } catch (e) {}
+      shatterHeart(svg);
+      await wait(RM ? 1500 : 2700);
+      window.location.replace('404.html');
+      return;
+    }
+
+    svg.classList.add('stage-' + n);
+    const p = svg.querySelector('.ck' + n);
+    if (p) {
+      p.style.strokeDasharray = '320';
+      p.style.strokeDashoffset = '320';
+      void p.getBoundingClientRect();
+      p.classList.add('drawn');
+    }
+    svg.classList.add('jolt');
+    setTimeout(() => svg.classList.remove('jolt'), 340);
+
+    const msgs = ['Rostdanmi? 💔', 'Yana bir marta o‘yla... 😢', 'Yuragim sinmoqda... 💔', 'Iltimos, to‘xta... 😢'];
+    showFeedback(msgs[n - 1] || msgs[0], false);
+  }
+
+  function shatterHeart(svg) {
+    document.body.classList.add('dim');
+    svg.classList.add('shattering');
+    const r = svg.getBoundingClientRect();
+    for (let i = 0; i < 14; i++) {
+      const s = document.createElement('div');
+      s.className = 'shard';
+      const size = rr(14, 30);
+      s.style.width = size.toFixed(0) + 'px';
+      s.style.height = (size * rr(1.2, 1.9)).toFixed(0) + 'px';
+      s.style.left = (r.left + r.width * rr(0.16, 0.84)).toFixed(0) + 'px';
+      s.style.top = (r.top + r.height * rr(0.12, 0.8)).toFixed(0) + 'px';
+      s.style.setProperty('--sx', rr(-150, 150).toFixed(0) + 'px');
+      s.style.setProperty('--sy', rr(50, 200).toFixed(0) + 'px');
+      s.style.setProperty('--sr', rr(120, 420).toFixed(0) + 'deg');
+      document.body.appendChild(s);
+    }
+    Particles.burst(r.left + r.width / 2, r.top + r.height / 2, RM ? 8 : 26);
+    const bh = document.createElement('div');
+    bh.id = 'black-heart';
+    bh.textContent = '🖤';
+    bh.style.left = (r.left + r.width / 2).toFixed(0) + 'px';
+    bh.style.top = (r.top + r.height / 2).toFixed(0) + 'px';
+    document.body.appendChild(bh);
+    requestAnimationFrame(() => requestAnimationFrame(() => svg.classList.add('gone')));
+  }
 
   /* ═══ CINEMATIC FINALE ═════════════════════════════════════════ */
   async function finale() {

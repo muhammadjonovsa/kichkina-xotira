@@ -447,3 +447,54 @@ body.started #music-btn { display: grid; }
   .heart-beat-wrap { animation: none; }
   .bg-aura { animation: none; }
 }
+
+/* ═══ SAVOL 11 — LOVE HEART (yurak sinişi) ═════════════════════ */
+#love-heart-stage { display: flex; justify-content: center; margin: -4px 0 12px; }
+#lh-svg { width: min(46vw, 170px); height: auto; transition: filter 0.6s ease, opacity 0.5s ease, transform 0.5s ease; animation: lhBeat 1.9s ease-in-out infinite; filter: drop-shadow(0 0 26px rgba(255, 92, 138, 0.4)); }
+@keyframes lhBeat {
+  0%, 100% { transform: scale(1); }
+  12% { transform: scale(1.06); }
+  24% { transform: scale(1); }
+  36% { transform: scale(1.05); }
+  55% { transform: scale(1); }
+}
+#lh-svg .ck { stroke: #14000a; stroke-width: 3.5; fill: none; stroke-linecap: round; opacity: 0; }
+#lh-svg .ck.drawn { opacity: 1; stroke-dashoffset: 0 !important; transition: stroke-dashoffset 0.65s ease, opacity 0.15s ease; }
+#lh-svg.stage-2 { filter: saturate(0.85) brightness(0.95); }
+#lh-svg.stage-3 { filter: saturate(0.6) brightness(0.85); }
+#lh-svg.stage-4 { filter: grayscale(0.55) brightness(0.7); }
+#lh-svg.stage-4 { animation-duration: 3.2s; }
+#lh-svg.shattering { animation: none; }
+#lh-svg.gone { opacity: 0; transform: scale(0.9); }
+
+.shard {
+  position: fixed; z-index: 45; pointer-events: none;
+  background: linear-gradient(160deg, #571027, #18000c);
+  border: 1px solid rgba(255, 143, 179, 0.25);
+  clip-path: polygon(50% 0%, 100% 78%, 10% 100%);
+  animation: shardFly 0.95s cubic-bezier(0.3, 0.6, 0.6, 1) forwards;
+}
+@keyframes shardFly { to { transform: translate(var(--sx), var(--sy)) rotate(var(--sr)); opacity: 0; } }
+
+#black-heart {
+  position: fixed; z-index: 46; pointer-events: none;
+  font-size: clamp(88px, 26vw, 150px); line-height: 1;
+  filter: drop-shadow(0 0 30px rgba(0, 0, 0, 0.9));
+  animation: blackHeartIn 1.7s ease forwards;
+}
+@keyframes blackHeartIn {
+  0% { transform: translate(-50%, -50%) scale(0.2); opacity: 0; }
+  30% { opacity: 1; }
+  45% { transform: translate(-50%, -50%) scale(1.14); }
+  62% { transform: translate(-50%, -50%) scale(0.97); }
+  80% { transform: translate(-50%, -50%) scale(1.07); }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+#q-answers.two .answer-btn { padding: 17px 18px; justify-content: center; }
+#q-answers.two .answer-text { flex: 0 1 auto; text-align: center; font-weight: 600; letter-spacing: 0.04em; font-size: clamp(1rem, 4vw, 1.15rem); }
+
+@media (prefers-reduced-motion: reduce) {
+  #lh-svg { animation: none; }
+  .shard { display: none; }
+}

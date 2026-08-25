@@ -183,22 +183,27 @@ const QUESTIONS = [
   },
 
   /* ═════════════════════════════════════════════════════════════
-     ⚠️ SAVOL 11 — PLACEHOLDER ⚠️
-     Bu yerga foydalanuvchi keyinchalik aniq savol va A/B/C/D
-     variantlarini beradi. O‘ZIMIZ hech qanday matn ixtiro qilmaymiz.
-     Faqat shu placeholder obyektini to‘ldirish kifoya.
+     SAVOL 11 — MAXSUS: yurak sinişi mexanikasi
+     "Yo‘q" 5 marta bosilsa yurak sinib, 404 sahifa ochiladi.
      ═════════════════════════════════════════════════════════════ */
   {
     id: 11,
-    isPlaceholder: true,
-    question: "[11-SAVOL JOYI — matn keyinchalik qo‘shiladi]",
+    special: "love-heart",
+    question: "Meni sevasanmi?",
     answers: [
-      { key: "A", text: "[A varianti matni]", type: "positive" },
-      { key: "B", text: "[B varianti matni]", type: "positive" },
-      { key: "C", text: "[C varianti matni]", type: "negative" },
-      { key: "D", text: "[D varianti matni]", type: "negative" }
+      { key: "A", text: "Ha ❤️", type: "positive" },
+      { key: "B", text: "Yo‘q", type: "negative" }
     ],
-    positiveMessages: POSITIVE_MESSAGES_FALLBACK,
-    negativeMessages: NEGATIVE_MESSAGES_FALLBACK
+    positiveMessages: [
+      "Yuragim ham seniki ❤️",
+      "Bu javob umrbod yetadi ❤️",
+      POSITIVE_MESSAGES_FALLBACK[4]
+    ],
+    negativeMessages: [
+      "Rostdanmi? 💔",
+      "Yana bir marta o‘yla... 😢",
+      "Yuragim sinmoqda... 💔",
+      "Iltimos, to‘xta... 😢"
+    ]
   }
 ];
