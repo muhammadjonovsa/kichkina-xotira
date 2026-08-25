@@ -82,6 +82,17 @@
       try { localStorage.setItem(LS_PHOTO, dataUrl); return true; } catch (e) {}
       return false;
     },
+    async clear() {
+      try {
+        const db = await this.db();
+        await new Promise((res, rej) => {
+          const tx = db.transaction('kv', 'readwrite');
+          tx.objectStore('kv').delete('photo');
+          tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+        });
+      } catch (e) {}
+      try { localStorage.removeItem(LS_PHOTO); } catch (e) {}
+    },
     async load() {
       try {
         const db = await this.db();
@@ -727,6 +738,17 @@
 
   function init() {
     try { Particles.init($('bg-canvas')); } catch (e) {}
+
+    if (location.search.indexOf('reset') > -1 || location.hash === '#reset') {
+      try {
+        localStorage.removeItem(LS_FLAGS);
+        localStorage.removeItem(LS_PHOTO);
+        sessionStorage.clear();
+        document.cookie = 'fw_done=; max-age=0; path=/';
+      } catch (e) {}
+      Photo.clear();
+      return;
+    }
 
     if (isLocked()) { showExpired(); return; }
 
